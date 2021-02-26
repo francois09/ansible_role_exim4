@@ -17,10 +17,10 @@ By default the role didn't install exim4 nor configure it
 * `exim4__configure` Configure or not (Default : False)
 * `exim4__root_email` Destination of local root mails (No default)
 * `exim4__conf`
-* *  `split` use splitted config
-* *  `type` server type
-* *  `smarthost` to which server resend outgoing mail
-* *  `readhost`
+  * `split` use splitted config
+  * `type` server type
+  * `smarthost` to which server resend outgoing mail
+  * `readhost`
 
 Dependencies
 ------------
