@@ -1,0 +1,29 @@
+---
+# Install the package
+- name: Install package
+  apt:
+    name: exim4
+    update_cache: yes
+    state: present
+  when:
+    - exim4__install
+
+# Create config file
+- name: Update global aliases
+  lineinfile:
+    regexp: "^root:.*"
+    line: "root: {{ exim4__root_email }}"
+    path: /etc/aliases
+  when:
+    - exim4__configure
+  notify: Reload aliases
+  ignore_errors: yes
+
+- name: Setup update-exim4.conf.conf
+  template:
+    src: update-exim4.conf.conf
+    dest: /etc/exim4/update-exim4.conf.conf
+  when:
+    - exim4__configure
+  notify: Reload exim4
+...

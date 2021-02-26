@@ -1,0 +1,9 @@
+---
+# handlers file for exim4
+- name: Reload aliases
+  shell: "/usr/bin/newaliases"
+
+- name: Reload exim4
+  systemd:
+    name: exim4
+    state: restarted

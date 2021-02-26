@@ -1,0 +1,5 @@
+---
+# defaults file for exim4
+exim4__install: False
+exim4__configure: False
+...
