@@ -2,4 +2,8 @@
 # defaults file for exim4
 exim4__install: False
 exim4__configure: False
+
+# defaults packages for exim4
+exim4__default_packages:
+  - exim4-daemon-light
 ...

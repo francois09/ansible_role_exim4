@@ -2,7 +2,7 @@
 # Install the package
 - name: Install package
   apt:
-    name: exim4
+    name: "{{ exim4__default_packages }}"
     update_cache: yes
     state: present
   when:
