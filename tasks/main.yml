@@ -26,4 +26,12 @@
   when:
     - exim4__configure
   notify: Reload exim4
+
+- name: Set mailname file
+  template:
+    dest: /etc/mailname
+    src: mailname
+    owner: root
+    group: root
+    mode: 0644
 ...
