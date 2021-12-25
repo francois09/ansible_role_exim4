@@ -6,4 +6,17 @@ exim4__configure: False
 # defaults packages for exim4
 exim4__default_packages:
   - exim4-daemon-light
+
+exim4__mailman_default_packages:
+  - mailman3
+
+exim4__conf_split: False
+exim4__conf_type: smarthost
+exim4__conf_smarthost: "smtp.example.com"
+exim4__conf_readhost: "example.com"
+exim4__conf_mailname: "example.com"
+
+exim4__use_mailman: False
+exim4__use_vhost: False
+
 ...

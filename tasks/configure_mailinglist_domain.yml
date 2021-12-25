@@ -1,0 +1,6 @@
+---
+- name: Create lists domains mailinglists
+  include_tasks: configure_mailinglist.yml
+  loop: "{{ main_item.listnames }}"
+  loop_control:
+    loop_var: middle_item

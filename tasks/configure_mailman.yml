@@ -1,0 +1,21 @@
+---
+- name: Set site owner
+  lineinfile:
+    regexp: "^site_owner:.*"
+    line: "site_owner: {{ exim4__root_email }}"
+    path: /etc/mailman3/mailman.cfg
+  notify: Reload mm3
+
+- name: Set MTA LMTP
+  lineinfile:
+    regexp: "^incoming:.*"
+    line: "incoming: mailman.mta.exim4.LMTP"
+    path: /etc/mailman3/mailman.cfg
+  notify: Reload mm3
+
+- name: Set MTA configuration
+  lineinfile:
+    regexp: "^configuration:.*"
+    line: "configuration: python:mailman.config.exim4"
+    path: /etc/mailman3/mailman.cfg
+  notify: Reload mm3
