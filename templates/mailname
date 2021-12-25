@@ -1,1 +1,1 @@
-{{ exim4__conf.mailname }}
+{{ exim4__conf_mailname }}

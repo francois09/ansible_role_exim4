@@ -6,4 +6,9 @@
 - name: Reload exim4
   systemd:
     name: exim4
-    state: restarted
+    state: reloaded
+
+- name: Reload mm3
+  systemd:
+    name: mailman3
+    state: reloaded

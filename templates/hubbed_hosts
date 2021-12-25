@@ -1,0 +1,4 @@
+{% for hh in exim4__conf_hubbed %}
+{{ hh.destination }}: {{ hh.forward }}{% if hh.forward_port is defined %}::{{ hh.forward_port }}{% endif %}
+
+{% endfor %}

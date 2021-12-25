@@ -8,6 +8,15 @@
   when:
     - exim4__install
 
+- name: Install mailman package
+  apt:
+    name: "{{ exim4__mailman_default_packages }}"
+    update_cache: yes
+    state: present
+  when:
+    - exim4__install
+    - exim4__use_mailman
+
 # Create config file
 - name: Update global aliases
   lineinfile:
@@ -27,6 +36,39 @@
     - exim4__configure
   notify: Reload exim4
 
+- name: Setup hubbed_hosts file
+  template:
+    src: hubbed_hosts
+    dest: /etc/exim4/hubbed_hosts
+    mode: 0644
+    owner: root
+    group: Debian-exim
+  when:
+    - exim4__configure
+    - exim4__conf_hubbed is defined
+
+- name: Fix hubbed_hosts router
+  lineinfile:
+    regexp: "^ *transport *= *remote_smtp$"
+    line: "  transport = remote_smtp_smarthost"
+    path: /etc/exim4/conf.d/router/150_exim4-config_hubbed_hosts
+  notify: Reload exim4
+  when:
+    - exim4__configure
+    - exim4__conf_hubbed is defined
+
+
+- name: Setup passwd.client file
+  template:
+    src: passwd.client
+    dest: /etc/exim4/passwd.client
+    mode: 0640
+    owner: root
+    group: Debian-exim
+  when:
+    - exim4__configure
+    - exim4__conf_remote is defined
+
 - name: Set mailname file
   template:
     dest: /etc/mailname
@@ -34,4 +76,16 @@
     owner: root
     group: root
     mode: 0644
+
+- import_tasks: configure_exim4_mailman.yml
+  when:
+    - exim4__configure
+    - exim4__use_mailman
+
+- import_tasks: configure_mailman.yml
+  when:
+    - exim4__configure
+    - exim4__use_mailman
+
+
 ...

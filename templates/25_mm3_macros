@@ -1,0 +1,20 @@
+# /etc/exim4/conf.d/main/25_mm3_macros
+# The colon-separated list of domains served by Mailman.
+
+domainlist mm_domains={% if exim4__listconf %}{% for i in exim4__listconf %}{{ i.domain }}{% if not loop.last %}:{% endif %}{% endfor %}{% endif %}
+
+MM3_LMTP_PORT=8024
+
+# MM3_HOME must be set to mailman's var directory, wherever it is
+# according to your installation.
+MM3_HOME=/var/lib/mailman3
+MM3_UID=list
+MM3_GID=list
+
+################################################################
+# The configuration below is boilerplate:
+# you should not need to change it.
+
+# The path to the list receipt (used as the required file when
+# matching list addresses)
+MM3_LISTCHK=MM3_HOME/lists/${local_part}.${domain}
