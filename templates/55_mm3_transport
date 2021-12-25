@@ -3,6 +3,6 @@ mailman3_transport:
   driver = smtp
   protocol = lmtp
   allow_localhost
-  hosts = localhost
+  hosts = 127.0.0.1
   port = MM3_LMTP_PORT
   rcpt_include_affixes = true

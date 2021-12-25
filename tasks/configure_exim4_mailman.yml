@@ -49,3 +49,10 @@
     owner: root
     group: Debian-exim
   notify: Reload exim4
+
+- name: Fix listmacrodefs
+  lineinfile:
+    regexp: "^domainlist local_domains = MAIN_LOCAL_DOMAINS"
+    line: "domainlist local_domains = MAIN_LOCAL_DOMAINS : dsearch;/etc/exim4/lists"
+    path: /etc/exim4/conf.d/main/01_exim4-config_listmacrosdefs
+  notify: Reload exim4

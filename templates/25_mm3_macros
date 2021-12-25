@@ -1,7 +1,7 @@
 # /etc/exim4/conf.d/main/25_mm3_macros
 # The colon-separated list of domains served by Mailman.
 
-domainlist mm_domains={% if exim4__listconf %}{% for i in exim4__listconf %}{{ i.domain }}{% if not loop.last %}:{% endif %}{% endfor %}{% endif %}
+domainlist mm_domains = dsearch;/etc/exim4/lists
 
 MM3_LMTP_PORT=8024
 
