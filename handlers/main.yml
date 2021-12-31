@@ -12,3 +12,8 @@
   systemd:
     name: mailman3
     state: reloaded
+
+- name: Restart mm3-web
+  systemd:
+    name: mailman3-web
+    state: restarted
