@@ -8,15 +8,6 @@
   when:
     - exim4__install
 
-- name: Install mailman package
-  apt:
-    name: "{{ exim4__mailman_default_packages }}"
-    update_cache: yes
-    state: present
-  when:
-    - exim4__install
-    - exim4__use_mailman
-
 # Create config file
 - name: Update global aliases
   lineinfile:
@@ -77,15 +68,46 @@
     group: root
     mode: 0644
 
-- import_tasks: configure_exim4_mailman.yml
+- name: Install mailman package
+  apt:
+    name: "{{ exim4__mailman_default_packages }}"
+    update_cache: yes
+    state: present
+  register: mailman_install
+  when:
+    - exim4__install
+    - exim4__use_mailman
+
+# Fresh install is consuming too much CPU on start (?)
+- name: Urgently stop mailman3-web (if fresh install)
+  systemd:
+    name: mailman3-web
+    state: stopped
+  register: mailman_stopped
   when:
     - exim4__configure
     - exim4__use_mailman
+    - mailman_install is changed
+
+# - name: Reconfigure mailman3-web cronjobs
+#   cron:
 
 - import_tasks: configure_mailman.yml
   when:
     - exim4__configure
     - exim4__use_mailman
 
+- import_tasks: configure_exim4_mailman.yml
+  when:
+    - exim4__configure
+    - exim4__use_mailman
 
+- name: Start mailman3-web (if fresh install)
+  systemd:
+    name: mailman3-web
+    state: started
+  when:
+    - exim4__configure
+    - exim4__use_mailman
+    - mailman_stopped is changed
 ...

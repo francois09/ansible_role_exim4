@@ -3,6 +3,8 @@ Exim4
 
 Simple role to install and configure exim4. This role will handle vmails, mailing lists, etc. (in a close future).
 
+Mailman3 and Mailman3-web are now supported by this role. vhost/vmail not yet.
+
 Requirements
 ------------
 
