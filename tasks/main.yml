@@ -48,7 +48,6 @@
     - exim4__configure
     - exim4__conf_hubbed is defined
 
-
 - name: Setup passwd.client file
   template:
     src: passwd.client
@@ -89,8 +88,13 @@
     - exim4__use_mailman
     - mailman_install is changed
 
-# - name: Reconfigure mailman3-web cronjobs
-#   cron:
+- name: Brutally change cron jobs for mm3-web
+  template:
+    dest: /etc/cron.d/mailman3-web
+    src: mailman3-web
+    owner: root
+    group: root
+    mode: 0644
 
 - import_tasks: configure_mailman.yml
   when:
@@ -101,6 +105,29 @@
   when:
     - exim4__configure
     - exim4__use_mailman
+
+- name: Create ngnix vhost file
+  template:
+    src: mailman_vhost.conf
+    dest: "/etc/nginx/sites-available/{{ item.domain }}"
+  notify: Reload nginx
+  with_items: "{{ exim4__mailman_listconf }}"
+  when:
+    - exim4__configure
+    - exim4__use_mailman
+    - exim4__mailman_listconf is defined
+
+- name: Create nginx link service file
+  file:
+    path: "/etc/nginx/sites-enabled/{{ item.domain }}.conf"
+    src: "/etc/nginx/sites-available/{{ item.domain }}"
+    state: link
+  notify: Reload nginx
+  with_items: "{{ exim4__mailman_listconf }}"
+  when:
+    - exim4__configure
+    - exim4__use_mailman
+    - exim4__mailman_listconf is defined
 
 - name: Start mailman3-web (if fresh install)
   systemd:

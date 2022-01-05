@@ -17,3 +17,8 @@
   systemd:
     name: mailman3-web
     state: restarted
+
+- name: Reload nginx
+  systemd:
+    name: nginx
+    state: reloaded
