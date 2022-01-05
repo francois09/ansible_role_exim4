@@ -114,7 +114,8 @@ USE_X_FORWARDED_HOST = True
 # CSRF_COOKIE_SECURE = True
 # CSRF_COOKIE_HTTPONLY = True
 # X_FRAME_OPTIONS = 'DENY'
-
+# Multiple vhosts allowed to filter lists
+FILTER_VHOST = True
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/

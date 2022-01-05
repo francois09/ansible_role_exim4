@@ -1,0 +1,9 @@
+# Cronjobs for the Mailman3 Django project (mailman3-web)
+
+# * *     * * *      www-data     [ -f /usr/bin/django-admin ] && flock -n /var/run/mailman3-web/cron.minutely /usr/share/mailman3-web/manage.py runjobs minutely
+# 2,17,32,47 * * * * www-data     [ -f /usr/bin/django-admin ] && flock -n /var/run/mailman3-web/cron.quarter_hourly /usr/share/mailman3-web/manage.py runjobs quarter_hourly
+@hourly            www-data     [ -f /usr/bin/django-admin ] && flock -n /var/run/mailman3-web/cron.hourly /usr/share/mailman3-web/manage.py runjobs hourly
+@daily             www-data     [ -f /usr/bin/django-admin ] && flock -n /var/run/mailman3-web/cron.daily /usr/share/mailman3-web/manage.py runjobs daily
+@weekly            www-data     [ -f /usr/bin/django-admin ] && flock -n /var/run/mailman3-web/cron.weekly /usr/share/mailman3-web/manage.py runjobs weekly
+@monthly           www-data     [ -f /usr/bin/django-admin ] && flock -n /var/run/mailman3-web/cron.monthly /usr/share/mailman3-web/manage.py runjobs monthly
+@yearly            www-data     [ -f /usr/bin/django-admin ] && flock -n /var/run/mailman3-web/cron.yearly /usr/share/mailman3-web/manage.py runjobs yearly

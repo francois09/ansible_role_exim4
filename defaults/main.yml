@@ -24,4 +24,5 @@ exim4__use_vhost: False
 
 exim4__mailman_admin_email: root@localhost
 
+exim4__mailman_use_ssl: False
 ...

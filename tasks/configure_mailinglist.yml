@@ -1,10 +1,10 @@
 ---
 - name: State the mailing list
   stat:
-    path: "/var/lib/mailman3/lists/{{ middle_item }}.{{ main_item.domain }}"
+    path: "/var/lib/mailman3/lists/{{ middle_item.name }}.{{ main_item.domain }}"
   register: mailing_list
 
 - name: Create mailinglist entry
-  shell: "mailman create -d {{ middle_item }}@{{ main_item.domain }}"
+  shell: "mailman create -o {{ middle_item.owner }} -d {{ middle_item.name }}@{{ main_item.domain }}"
   when:
     - not mailing_list.stat.exists

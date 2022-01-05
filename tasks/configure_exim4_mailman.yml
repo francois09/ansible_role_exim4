@@ -11,17 +11,17 @@
     state: directory
     owner: root
     group: Debian-exim
-  with_items: "{{ exim4__listconf }}"
+  with_items: "{{ exim4__mailman_listconf }}"
   when:
-    - exim4__listconf is defined
+    - exim4__mailman_listconf is defined
 
 - name: Create lists domains mailinglists
   include_tasks: configure_mailinglist_domain.yml
-  loop: "{{ exim4__listconf }}"
+  loop: "{{ exim4__mailman_listconf }}"
   loop_control:
     loop_var: main_item
   when:
-    - exim4__listconf is defined
+    - exim4__mailman_listconf is defined
 
 - name: Setup exim4 main file for mm3
   template:
