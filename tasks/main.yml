@@ -66,75 +66,17 @@
     owner: root
     group: root
     mode: 0644
-
-- name: Install mailman package
-  apt:
-    name: "{{ exim4__mailman_default_packages }}"
-    update_cache: yes
-    state: present
-  register: mailman_install
-  when:
-    - exim4__install
-    - exim4__use_mailman
-
-# Fresh install is consuming too much CPU on start (?)
-- name: Urgently stop mailman3-web (if fresh install)
-  systemd:
-    name: mailman3-web
-    state: stopped
-  register: mailman_stopped
   when:
     - exim4__configure
-    - exim4__use_mailman
-    - mailman_install is changed
-
-- name: Brutally change cron jobs for mm3-web
-  template:
-    dest: /etc/cron.d/mailman3-web
-    src: mailman3-web
-    owner: root
-    group: root
-    mode: 0644
 
 - import_tasks: configure_mailman.yml
   when:
     - exim4__configure
     - exim4__use_mailman
 
-- import_tasks: configure_exim4_mailman.yml
+- import_tasks: configure_virtual_mail.yml
   when:
     - exim4__configure
-    - exim4__use_mailman
+    - exim4__use_virtual_mail
 
-- name: Create ngnix vhost file
-  template:
-    src: mailman_vhost.conf
-    dest: "/etc/nginx/sites-available/{{ item.domain }}"
-  notify: Reload nginx
-  with_items: "{{ exim4__mailman_listconf }}"
-  when:
-    - exim4__configure
-    - exim4__use_mailman
-    - exim4__mailman_listconf is defined
-
-- name: Create nginx link service file
-  file:
-    path: "/etc/nginx/sites-enabled/{{ item.domain }}.conf"
-    src: "/etc/nginx/sites-available/{{ item.domain }}"
-    state: link
-  notify: Reload nginx
-  with_items: "{{ exim4__mailman_listconf }}"
-  when:
-    - exim4__configure
-    - exim4__use_mailman
-    - exim4__mailman_listconf is defined
-
-- name: Start mailman3-web (if fresh install)
-  systemd:
-    name: mailman3-web
-    state: started
-  when:
-    - exim4__configure
-    - exim4__use_mailman
-    - mailman_stopped is changed
 ...
