@@ -1,0 +1,18 @@
+
+### transport/30_exim4-config_vmail_spool
+
+# This transport is used for local delivery to virtual user mailboxes in traditional
+# BSD mailbox format.
+#
+vmail_spool:
+  debug_print = "T: appendfile for virtual $local_part@$domain"
+  driver = appendfile
+  file = /var/lib/mail/$domain/$local_part/mailbox
+  delivery_date_add
+  envelope_to_add
+  return_path_add
+  user = vmail
+  # user = ${lookup{$local_part}lsearch{/etc/exim4/vmail/$domain/maps}}
+  group = mail
+  mode = 0660
+  mode_fail_narrower = false

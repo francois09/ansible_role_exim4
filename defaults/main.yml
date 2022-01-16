@@ -21,6 +21,7 @@ exim4__conf_mailname: ""
 
 exim4__use_mailman: False
 exim4__use_vhost: False
+exim4__use_virtual_mail: False
 
 exim4__mailman_admin_email: root@localhost
 

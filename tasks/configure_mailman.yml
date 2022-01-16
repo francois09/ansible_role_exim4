@@ -1,4 +1,28 @@
 ---
+- name: Install mailman package
+  apt:
+    name: "{{ exim4__mailman_default_packages }}"
+    update_cache: yes
+    state: present
+  register: mailman_install
+
+# Fresh install is consuming too much CPU on start (?)
+- name: Urgently stop mailman3-web (if fresh install)
+  systemd:
+    name: mailman3-web
+    state: stopped
+  register: mailman_stopped
+  when:
+    - mailman_install is changed
+
+- name: Brutally change cron jobs for mm3-web
+  template:
+    dest: /etc/cron.d/mailman3-web
+    src: mailman3-web
+    owner: root
+    group: root
+    mode: 0644
+
 - name: Set site owner
   lineinfile:
     regexp: "^site_owner:.*"
@@ -36,3 +60,88 @@
     group: www-data
   notify:
     - Restart mm3-web
+
+- name: Create list directory
+  file:
+    path: "/etc/exim4/lists"
+    state: directory
+    owner: root
+    group: Debian-exim
+
+- name: Create lists domains
+  file:
+    path: "/etc/exim4/lists/{{ item.domain }}"
+    state: directory
+    owner: root
+    group: Debian-exim
+  with_items: "{{ exim4__mailman_listconf }}"
+  when:
+    - exim4__mailman_listconf is defined
+
+- name: Create lists domains mailinglists
+  include_tasks: configure_mailinglist_domain.yml
+  loop: "{{ exim4__mailman_listconf }}"
+  loop_control:
+    loop_var: main_item
+  when:
+    - exim4__mailman_listconf is defined
+
+- name: Setup exim4 main file for mm3
+  template:
+    src: 25_mm3_macros
+    dest: /etc/exim4/conf.d/main/25_mm3_macros
+    mode: 0644
+    owner: root
+    group: Debian-exim
+  notify: Reload exim4
+
+- name: Setup exim4 router file for mm3
+  template:
+    src: 155_mm3_router
+    dest: /etc/exim4/conf.d/router/155_mm3_router
+    mode: 0644
+    owner: root
+    group: Debian-exim
+  notify: Reload exim4
+
+- name: Setup exim4 transport file for mm3
+  template:
+    src: 55_mm3_transport
+    dest: /etc/exim4/conf.d/transport/55_mm3_transport
+    mode: 0644
+    owner: root
+    group: Debian-exim
+  notify: Reload exim4
+
+- name: Fix listmacrodefs
+  lineinfile:
+    regexp: "^domainlist local_domains = MAIN_LOCAL_DOMAINS"
+    line: "domainlist local_domains = MAIN_LOCAL_DOMAINS : dsearch;/etc/exim4/lists"
+    path: /etc/exim4/conf.d/main/01_exim4-config_listmacrosdefs
+  notify: Reload exim4
+
+- name: Create ngnix vhost file
+  template:
+    src: mailman_vhost.conf
+    dest: "/etc/nginx/sites-available/{{ item.domain }}"
+  notify: Reload nginx
+  with_items: "{{ exim4__mailman_listconf }}"
+  when:
+    - exim4__mailman_listconf is defined
+
+- name: Create nginx link service file
+  file:
+    path: "/etc/nginx/sites-enabled/{{ item.domain }}.conf"
+    src: "/etc/nginx/sites-available/{{ item.domain }}"
+    state: link
+  notify: Reload nginx
+  with_items: "{{ exim4__mailman_listconf }}"
+  when:
+    - exim4__mailman_listconf is defined
+
+- name: Start mailman3-web (if fresh install)
+  systemd:
+    name: mailman3-web
+    state: started
+  when:
+    - mailman_stopped is changed

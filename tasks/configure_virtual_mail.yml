@@ -1,0 +1,10 @@
+---
+- name: Setup specific transport for virtual mailbox
+  template:
+    src: 30_exim4-config_vmail_spool
+    dest: /etc/exim4/conf.d/transport/30_exim4-config_vmail_spool
+
+- name: Setup specific transport for virtual maildir
+  template:
+    src: 30_exim4-config_maildir_vhome
+    dest: /etc/exim4/conf.d/transport/30_exim4-config_maildir_vhome
