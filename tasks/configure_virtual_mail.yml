@@ -8,3 +8,18 @@
   template:
     src: 30_exim4-config_maildir_vhome
     dest: /etc/exim4/conf.d/transport/30_exim4-config_maildir_vhome
+
+- name: Setup specific router for virtual domains aliases
+  template:
+    src: 105_exim4-config_virtual_domain_aliases
+    dest: /etc/exim4/conf.d/router/105_exim4-config_virtual_domain_aliases
+
+- name: Setup specific router for virtual domains
+  template:
+    src: 110_exim4-config_virtual_domain
+    dest: /etc/exim4/conf.d/router/110_exim4-config_virtual_domain
+
+- name: Setup main file for virtual domains
+  template:
+    src: 01_exim4-config_listmacrosdefs
+    dest: /etc/exim4/conf.d/main/01_exim4-config_listmacrosdefs
