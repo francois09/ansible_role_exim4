@@ -70,13 +70,38 @@
     - exim4__configure
 
 - import_tasks: configure_mailman.yml
+  notify: Reload aliases
   when:
     - exim4__configure
     - exim4__use_mailman
 
 - import_tasks: configure_virtual_mail.yml
+  notify: Reload aliases
   when:
     - exim4__configure
     - exim4__use_virtual_mail
+
+- name: Create domain list file
+  template:
+    src: domain_list
+    dest: /var/lib/mail/domain_list
+    mode: 0755
+    owner: Debian-exim
+    group: Debian-exim
+  when:
+    - exim4__configure
+    - exim4__host_virtual_mail
+    
+- name: Create domain directories
+  file:
+    path: /var/lib/mail/{{ item.name }}
+    state: directory
+    mode: 0755
+    owner: Debian-exim
+    group: Debian-exim
+  loop: "{{ exim4__managed_domain }}"
+  when:
+    - exim4__configure
+    - exim4__host_virtual_mail
 
 ...

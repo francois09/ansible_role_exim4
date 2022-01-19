@@ -1,0 +1,31 @@
+
+### router/110_exim4-config_virtual_domain
+#################################
+
+
+virtual_domain:
+  debug_print = "R: virtual_domain for $local_part@$domain"
+  driver = accept
+  user = Debian-exim
+  group = Debian-exim
+  domains = ${lookup{$domain}lsearch{/var/lib/mail/domain_list}}
+  require_files = Debian-exim,Debian-exim:/var/lib/mail/$domain_data/$local_part/mailbox
+  transport = vmail_spool
+
+virtual_domain_maildir:
+  debug_print = "R: virtual_domain_maildir for $local_part@$domain"
+  driver = accept
+  user = Debian-exim
+  group = Debian-exim
+  domains = ${lookup{$domain}lsearch{/var/lib/mail/domain_list}}
+  require_files = Debian-exim,Debian-exim:/var/lib/mail/$domain_data/$local_part/Maildir
+  transport = vmail_maildir
+
+
+virtual_domain_fail:
+  debug_print = "R: virtual_domain_fail for $local_part@$domain"
+  driver = redirect
+  domains = ${lookup{$domain}lsearch{/var/lib/mail/domain_list}}
+  allow_fail
+  data = :fail: Non existant user in this domain
+  no_more

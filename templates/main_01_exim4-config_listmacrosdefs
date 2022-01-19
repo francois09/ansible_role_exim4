@@ -35,11 +35,16 @@ UPEX4CmacrosUPEX4C = 1
 
 # List of domains considered local for exim. Domains not listed here
 # need to be deliverable remotely.
-domainlist local_domains = MAIN_LOCAL_DOMAINS : dsearch;/var/lib/mail
+domainlist local_domains = MAIN_LOCAL_DOMAINS
 
+{% if exim4__use_virtual_mail %}
+# Manage virtual domains too
+domainlist virtual_domains = lsearch;/var/lib/mail/domain_list
+
+{% endif %}
 # List of recipient domains to relay _to_. Use this list if you're -
 # for example - fallback MX or mail gateway for domains.
-domainlist relay_to_domains = MAIN_RELAY_TO_DOMAINS : dsearch;/var/lib/mail
+domainlist relay_to_domains = MAIN_RELAY_TO_DOMAINS
 
 # List of sender networks (IP addresses) to _unconditionally_ relay
 # _for_. If you intend to be SMTP AUTH server, you do not need to enter

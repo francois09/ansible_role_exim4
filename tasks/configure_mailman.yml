@@ -88,7 +88,7 @@
 
 - name: Setup exim4 main file for mm3
   template:
-    src: 25_mm3_macros
+    src: main_25_mm3_macros
     dest: /etc/exim4/conf.d/main/25_mm3_macros
     mode: 0644
     owner: root
@@ -97,7 +97,7 @@
 
 - name: Setup exim4 router file for mm3
   template:
-    src: 155_mm3_router
+    src: router_155_mm3_router
     dest: /etc/exim4/conf.d/router/155_mm3_router
     mode: 0644
     owner: root
@@ -106,7 +106,7 @@
 
 - name: Setup exim4 transport file for mm3
   template:
-    src: 55_mm3_transport
+    src: transport_55_mm3_transport
     dest: /etc/exim4/conf.d/transport/55_mm3_transport
     mode: 0644
     owner: root

@@ -1,12 +1,12 @@
 
-### transport/30_exim4-config_maildir_vhome
+### transport/30_exim4-config_vmail_maildir
 #################################
 
 # Use this instead of mail_spool if you want to to deliver to Maildir in
 # home-directory - change the definition of LOCAL_DELIVERY
 #
-maildir_vhome:
-  debug_print = "T: maildir_vhome for $local_part@$domain"
+vmail_maildir:
+  debug_print = "T: vmail_maildir for $local_part@$domain"
   driver = appendfile
   .ifdef MAILDIR_HOME_MAILDIR_LOCATION
   directory = MAILDIR_HOME_MAILDIR_LOCATION

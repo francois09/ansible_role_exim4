@@ -1,0 +1,13 @@
+
+### router/105_exim4-config_virtual_domain_aliases
+#################################
+
+
+virtual_domain_aliases:
+  debug_print = "R: virtual_domain_alias for $local_part@$domain"
+  driver = redirect
+  user = mail
+  group = mail
+  domains = ${lookup{$domain}lsearch{/var/lib/mail/domain_list}}
+  require_files = /var/lib/mail/$domain_data/aliases
+  data = ${lookup{$local_part}lsearch{/var/lib/mail/$domain_data/aliases}}
