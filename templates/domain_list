@@ -1,0 +1,3 @@
+{% for d in exim4__managed_domain %}
+{{ d.name }}:{{ d.name }}
+{% endfor %}

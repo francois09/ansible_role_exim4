@@ -1,25 +1,38 @@
 ---
 - name: Setup specific transport for virtual mailbox
   template:
-    src: 30_exim4-config_vmail_spool
+    src: transport_30_exim4-config_vmail_spool
     dest: /etc/exim4/conf.d/transport/30_exim4-config_vmail_spool
+  notify: Reload exim4
 
 - name: Setup specific transport for virtual maildir
   template:
-    src: 30_exim4-config_maildir_vhome
-    dest: /etc/exim4/conf.d/transport/30_exim4-config_maildir_vhome
+    src: transport_30_exim4-config_vmail_maildir
+    dest: /etc/exim4/conf.d/transport/30_exim4-config_vmail_maildir
+  notify: Reload exim4
 
 - name: Setup specific router for virtual domains aliases
   template:
-    src: 105_exim4-config_virtual_domain_aliases
+    src: router_105_exim4-config_virtual_domain_aliases
     dest: /etc/exim4/conf.d/router/105_exim4-config_virtual_domain_aliases
+  notify: Reload exim4
 
 - name: Setup specific router for virtual domains
   template:
-    src: 110_exim4-config_virtual_domain
+    src: router_110_exim4-config_virtual_domain
     dest: /etc/exim4/conf.d/router/110_exim4-config_virtual_domain
+  notify: Reload exim4
 
 - name: Setup main file for virtual domains
   template:
-    src: 01_exim4-config_listmacrosdefs
+    src: main_01_exim4-config_listmacrosdefs
     dest: /etc/exim4/conf.d/main/01_exim4-config_listmacrosdefs
+  notify: Reload exim4
+
+- name: Setup acl file for virtual domains
+  template:
+    src: acl_30_exim4-config_check_rcpt
+    dest: /etc/exim4/conf.d/acl/30_exim4-config_check_rcpt
+    variable_end_string: "]]"
+    variable_start_string: "[["
+  notify: Reload exim4
