@@ -9,6 +9,7 @@ virtual_domain:
   user = Debian-exim
   group = Debian-exim
   domains = ${lookup{$domain}lsearch{/var/lib/mail/domain_list}}
+  local_parts = ${lookup{$local_part}lsearch{/var/lib/mail/$domain_data/user_list}}
   require_files = Debian-exim,Debian-exim:/var/lib/mail/$domain_data/$local_part/mailbox
   transport = vmail_spool
 
@@ -18,14 +19,14 @@ virtual_domain_maildir:
   user = Debian-exim
   group = Debian-exim
   domains = ${lookup{$domain}lsearch{/var/lib/mail/domain_list}}
-  require_files = Debian-exim,Debian-exim:/var/lib/mail/$domain_data/$local_part/Maildir
+  local_parts = ${lookup{$local_part}lsearch{/var/lib/mail/$domain_data/user_list}}
+  require_files = Debian-exim,Debian-exim:/var/lib/mail/$domain_data/$local_part_data/Maildir
   transport = vmail_maildir
-
 
 virtual_domain_fail:
   debug_print = "R: virtual_domain_fail for $local_part@$domain"
   driver = redirect
   domains = ${lookup{$domain}lsearch{/var/lib/mail/domain_list}}
   allow_fail
-  data = :fail: Non existant user in this domain
+  data = :fail: No mailbox for $local_part@$domain
   no_more
