@@ -7,12 +7,11 @@
 vmail_spool:
   debug_print = "T: appendfile for virtual $local_part@$domain"
   driver = appendfile
-  file = /var/lib/mail/$domain/$local_part/mailbox
+  file = /var/lib/mail/$domain_data/$local_part_data/mailbox
   delivery_date_add
   envelope_to_add
   return_path_add
   user = Debian-exim
-  # user = ${lookup{$local_part}lsearch{/etc/exim4/vmail/$domain/maps}}
   group = Debian-exim
   mode = 0660
   mode_fail_narrower = false
