@@ -1,4 +1,5 @@
 ---
+# called by configure_mailinglist_domain
 - name: State the mailing list
   stat:
     path: "/var/lib/mailman3/lists/{{ middle_item.name }}.{{ main_item.domain }}"

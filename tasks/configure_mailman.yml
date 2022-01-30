@@ -1,4 +1,5 @@
 ---
+# called by main.yml
 - name: Install mailman package
   apt:
     name: "{{ exim4__mailman_default_packages }}"

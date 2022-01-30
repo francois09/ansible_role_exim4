@@ -22,3 +22,21 @@
   systemd:
     name: nginx
     state: reloaded
+
+- name: Reload AuthDaemon
+  systemd:
+    name: courier-authdaemon
+    state: reloaded
+
+- name: Rebuild userdb
+  shell: "makeuserdb"
+
+- name: Restart courier-imap-ssl
+  systemd:
+    name: courier-imap-ssl
+    state: restarted
+
+- name: Restart courier-pop-ssl
+  systemd:
+    name: courier-pop-ssl
+    state: restarted

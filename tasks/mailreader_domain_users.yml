@@ -1,0 +1,9 @@
+---
+# called by mailreader_domains.yml
+- name: Create user
+  shell: "userdb {{ item.name }}@{{ domain_item.name }} set uid=107 gid=113 home=/var/lib/mail/{{ domain_item.name }}/{{ item.name }} mail=/var/lib/mail/{{ domain_item.name }}/{{ item.name }}/Maildir"
+  notify: Rebuild userdb
+
+- name: Set Password
+  shell: "echo '{{ item.password }}'|userdbpw -md5|userdb {{ item.name }}@{{ domain_item.name }} set systempw"
+  notify: Rebuild userdb

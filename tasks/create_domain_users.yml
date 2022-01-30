@@ -1,0 +1,24 @@
+---
+# Called by main.yml
+- name: Create domain user list
+  template:
+    dest: "/var/lib/mail/{{ item.name }}/user_list"
+    src: user_list
+    owner: Debian-exim
+    group: Debian-exim
+    mode: 0644
+
+- name: Create domain user aliases
+  template:
+    dest: "/var/lib/mail/{{ item.name }}/aliases"
+    src: aliases
+    owner: Debian-exim
+    group: Debian-exim
+    mode: 0644
+  when:
+    - item.aliases is defined
+
+- include_tasks: create_domain_users_maildir.yml
+  loop: "{{ item.users }}"
+  loop_control:
+    loop_var: item_user

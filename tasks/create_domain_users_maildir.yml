@@ -1,0 +1,17 @@
+---
+# Called by create_domain_users.yml
+- name: Create domain user homedir
+  file:
+    path: "/var/lib/mail/{{ item.name }}/{{ item_user.name }}"
+    state: directory
+    owner: Debian-exim
+    group: Debian-exim
+    mode: 0755
+
+- name: Create domain user Maildir
+  file:
+    path: "/var/lib/mail/{{ item.name }}/{{ item_user.name }}/Maildir"
+    state: directory
+    owner: Debian-exim
+    group: Debian-exim
+    mode: 0755

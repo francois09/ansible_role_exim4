@@ -85,13 +85,13 @@
   template:
     src: domain_list
     dest: /var/lib/mail/domain_list
-    mode: 0755
+    mode: 0660
     owner: Debian-exim
     group: Debian-exim
   when:
     - exim4__configure
     - exim4__host_virtual_mail
-    
+
 - name: Create domain directories
   file:
     path: /var/lib/mail/{{ item.name }}
@@ -104,4 +104,15 @@
     - exim4__configure
     - exim4__host_virtual_mail
 
-...
+- include_tasks: create_domain_users.yml
+  loop: "{{ exim4__managed_domain }}"
+  when:
+    - exim4__configure
+    - exim4__host_virtual_mail
+    - exim4__managed_domain is defined
+
+- import_tasks: configure_mail_reader.yml
+  when:
+    - exim4__configure
+    - exim4__use_mail_reader
+

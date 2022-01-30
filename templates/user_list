@@ -1,0 +1,3 @@
+{% for n in item.users %}
+{{ n.name }}:{{ n.name }}
+{% endfor %}

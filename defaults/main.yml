@@ -13,6 +13,11 @@ exim4__mailman_default_packages:
   - python3-django-postorius
   # - mailman3-web
 
+exim4__mailreader_default_packages:
+  # - solid-pop3d
+  - courier-pop
+  - courier-imap
+
 exim4__conf_split: False
 exim4__conf_type: smarthost
 exim4__conf_smarthost: ""
@@ -20,6 +25,7 @@ exim4__conf_readhost: ""
 exim4__conf_mailname: ""
 
 exim4__use_mailman: False
+exim4__use_mail_reader: False
 exim4__use_vhost: False
 exim4__use_virtual_mail: False
 exim4__host_virtual_mail: False

@@ -1,0 +1,6 @@
+---
+# Called by configure_mail_reader.yml
+- include_tasks: mailreader_domain_users.yml
+  loop: "{{ domain_item.users }}"
+  when:
+    - domain_item.users is defined

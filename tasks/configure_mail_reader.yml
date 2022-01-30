@@ -1,0 +1,43 @@
+---
+# called by main.yml
+- name: Install mailreader packages
+  apt:
+    name: "{{ exim4__mailreader_default_packages }}"
+    update_cache: yes
+    state: present
+
+- name: Set auth method for courier
+  lineinfile:
+    regexp: "^authmodulelist=.*"
+    line: 'authmodulelist="authuserdb"'
+    path: /etc/courier/authdaemonrc
+  notify: Reload AuthDaemon
+
+- name: Setup Main Certfiles for imap
+  file:
+    path: "/etc/courier/imapd.pem"
+    src: "/etc/courier/imapd.pem.imap.{{ exim4__managed_domain[0].name }}"
+    force: yes
+    state: link
+  notify:
+    - Restart courier-imap-ssl
+  when:
+    - exim4__managed_domain is defined
+
+- name: Setup Main Certfiles for pop3
+  file:
+    path: "/etc/courier/pop3d.pem"
+    src: "/etc/courier/pop3d.pem.pop3.{{ exim4__managed_domain[0].name }}"
+    force: yes
+    state: link
+  notify:
+    - Restart courier-pop-ssl
+  when:
+    - exim4__managed_domain is defined
+
+- include_tasks: mailreader_domains.yml
+  loop: "{{ exim4__managed_domain }}"
+  loop_control:
+    loop_var: domain_item
+  when:
+    - exim4__managed_domain is defined

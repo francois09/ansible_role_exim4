@@ -1,4 +1,5 @@
 ---
+# Called by main.yml
 - name: Setup specific transport for virtual mailbox
   template:
     src: transport_30_exim4-config_vmail_spool
