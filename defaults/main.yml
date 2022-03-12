@@ -7,6 +7,10 @@ exim4__configure: False
 exim4__default_packages:
   - exim4-daemon-light
 
+exim4__spam_default_packages:
+  - sa-exim
+  - spamassassin
+
 exim4__mailman_default_packages:
   - mailman3
   - nginx
@@ -25,6 +29,7 @@ exim4__conf_readhost: ""
 exim4__conf_mailname: ""
 
 exim4__use_mailman: False
+exim4__use_spamassassin: False
 exim4__use_mail_reader: False
 exim4__use_vhost: False
 exim4__use_virtual_mail: False

@@ -8,6 +8,11 @@
     name: exim4
     state: reloaded
 
+- name: Reload spamassassin
+  systemd:
+    name: spamassassin
+    state: reloaded
+
 - name: Reload mm3
   systemd:
     name: mailman3
