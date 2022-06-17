@@ -16,6 +16,7 @@
     path: /etc/aliases
   when:
     - exim4__configure
+    - exim4__root_email is defined
   notify: Reload aliases
   ignore_errors: yes
 
