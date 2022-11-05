@@ -1,41 +1,11 @@
 ---
 # called by main.yml
-- name: Install spamassassin packages
-  apt:
-    name: "{{ exim4__spam_default_packages }}"
-    update_cache: yes
-    state: present
-
-- name: Enable spamassassin
-  systemd:
-    name: spamassassin
-    state: started
-    enabled: yes
-
 - name: Enable sa-exim
-  lineinfile:
-    regexp: "^SAEximRunCond: 0"
-    line: 'SAEximRunCond: 1'
-    path: /etc/exim4/sa-exim.conf
+  template:
+    src: sa-exim.conf
+    dest: /etc/exim4/sa-exim.conf
+    owner: root
+    group: root
+    mode: 0644
   notify: Reload exim4
-
-- name: Enable spamassassin Cron update
-  lineinfile:
-    regexp: "^CRON=0"
-    line: 'CRON=1'
-    path: /etc/default/spamassassin
-
-- name: Mark subjects
-  lineinfile:
-    regexp: "^# rewrite_header"
-    line: 'rewrite_header Subject ***SPAM***'
-    path: /etc/spamassassin/local.cf
-  notify: Reload spamassassin
-
-- name: Change score
-  lineinfile:
-    regexp: "^# required_score"
-    line: 'required_score 4.0'
-    path: /etc/spamassassin/local.cf
-  notify: Reload spamassassin
 
