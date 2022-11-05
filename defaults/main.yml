@@ -9,7 +9,6 @@ exim4__default_packages:
 
 exim4__spam_default_packages:
   - sa-exim
-  - spamassassin
 
 exim4__mailman_default_packages:
   - mailman3
