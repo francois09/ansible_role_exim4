@@ -39,6 +39,14 @@
     - exim4__configure
     - exim4__conf_hubbed is defined
 
+- name: Remove hubbed_hosts file
+  file:
+    dest: /etc/exim4/hubbed_hosts
+    state: absent
+  when:
+    - exim4__configure
+    - exim4__conf_hubbed is not defined
+
 - name: Fix hubbed_hosts router
   lineinfile:
     regexp: "^ *transport *= *remote_smtp$"
@@ -48,6 +56,15 @@
   when:
     - exim4__configure
     - exim4__conf_hubbed is defined
+    - exim4__conf_split
+
+- name: Warn about hubbed_hosts config
+  debug:
+    msg: "Don't know how to manage hubbed_host router on a non-split config !"
+  when:
+    - exim4__configure
+    - exim4__conf_hubbed is defined
+    - not exim4__conf_split
 
 - name: Setup passwd.client file
   template:
@@ -59,6 +76,14 @@
   when:
     - exim4__configure
     - exim4__conf_remote is defined
+
+- name: Remove passwd.client file
+  file:
+    dest: /etc/exim4/passwd.client
+    state: absent
+  when:
+    - exim4__configure
+    - exim4__conf_remote is not defined
 
 - name: Set mailname file
   template:
@@ -109,6 +134,17 @@
   when:
     - exim4__configure
     - exim4__host_virtual_mail
+
+- name: Create email_addresses for outgoing mail
+  template:
+    src: email_addresses
+    dest: /etc/email-addresses
+    mode: 0644
+    owner: root
+    group: root
+  when:
+    - exim4__configure
+    - exim4__conf_email_addresses is defined
 
 - include_tasks: create_domain_users.yml
   loop: "{{ exim4__managed_domain }}"
