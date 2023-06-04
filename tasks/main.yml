@@ -158,3 +158,23 @@
     - exim4__configure
     - exim4__use_mail_reader
 
+- name: Set max smtp mail queue by connection
+  template:
+    src: main_02_exim4-config_max_smtp
+    dest: /etc/exim4/conf.d/main/02_exim4-config_max_smtp
+    mode: 0644
+    owner: root
+    group: root
+  when:
+    - exim4__configure
+    - exim4__conf_split
+    - exim4__max_smtp_queue is defined
+  notify: Reload exim4
+
+- name: Warn about exim4__max_smtp_queue config
+  debug:
+    msg: "Don't know how to manage exim4__max_smtp_queue router on a non-split config !"
+  when:
+    - exim4__configure
+    - exim4__max_smtp_queue is defined
+    - not exim4__conf_split
