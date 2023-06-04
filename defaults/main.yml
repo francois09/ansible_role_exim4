@@ -33,6 +33,7 @@ exim4__use_mail_reader: False
 exim4__use_vhost: False
 exim4__use_virtual_mail: False
 exim4__host_virtual_mail: False
+# exim4__max_smtp_queue:
 
 exim4__mailman_admin_email: root@localhost
 

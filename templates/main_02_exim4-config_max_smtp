@@ -1,0 +1,4 @@
+# define max queued mails per smtp connection
+# (essentially used in fetchmail mode)
+
+smtp_accept_queue_per_connection = {{ exim4__max_smtp_queue }}
