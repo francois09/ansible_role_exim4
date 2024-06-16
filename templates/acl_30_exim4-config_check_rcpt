@@ -289,38 +289,23 @@ acl_check_rcpt:
   # Missing spf-tools-perl will trigger the "Unexpected error in
   # SPF check" warning.
   .ifdef CHECK_RCPT_SPF
+  .ifdef _HAVE_SPF
   deny
     !acl = acl_local_deny_exceptions
-    condition = ${run{/usr/bin/spfquery.mail-spf-perl --ip \
-                   ${quote:$sender_host_address} --identity \
-                   ${if def:sender_address_domain \
-                       {--scope mfrom  --identity ${quote:$sender_address}}\
-                       {--scope helo --identity ${quote:$sender_helo_name}}}}\
-                   {no}{${if eq {$runrc}{1}{yes}{no}}}}
+    spf = fail
     message = [SPF] $sender_host_address is not allowed to send mail from \
               ${if def:sender_address_domain {$sender_address_domain}{$sender_helo_name}}.
     log_message = SPF check failed.
 
   defer
     !acl = acl_local_deny_exceptions
-    condition = ${if eq {$runrc}{5}{yes}{no}}
+    spf = temperror
     message = Temporary DNS error while checking SPF record.  Try again later.
 
   warn
-    condition = ${if <={$runrc}{6}{yes}{no}}
-    add_header = Received-SPF: ${if eq {$runrc}{0}{pass}\
-                                {${if eq {$runrc}{2}{softfail}\
-                                 {${if eq {$runrc}{3}{neutral}\
-				  {${if eq {$runrc}{4}{permerror}\
-				   {${if eq {$runrc}{6}{none}{error}}}}}}}}}\
-				} client-ip=$sender_host_address; \
-				${if def:sender_address_domain \
-				   {envelope-from=${sender_address}; }{}}\
-				helo=$sender_helo_name
-
-  warn
-    condition = ${if >{$runrc}{6}{yes}{no}}
-    log_message = Unexpected error in SPF check.
+    spf = pass:softfail:neutral:permerror
+    add_header = :at_start:$spf_received
+  .endif
   .endif
 
 
