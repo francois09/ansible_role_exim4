@@ -10,6 +10,10 @@ exim4__default_packages:
 exim4__spam_default_packages:
   - sa-exim
 
+exim4__db_aliases_default_packages:
+  - python3-pymysql
+  - default-mysql-client
+
 exim4__mailman_default_packages:
   - mailman3
   - nginx
@@ -34,6 +38,8 @@ exim4__use_vhost: False
 exim4__use_virtual_mail: False
 exim4__host_virtual_mail: False
 # exim4__max_smtp_queue:
+exim4__use_db_aliases: False
+exim4__use_file_aliases: False
 
 exim4__mailman_admin_email: root@localhost
 
