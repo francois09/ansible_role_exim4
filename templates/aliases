@@ -1,3 +1,5 @@
-{% for alias,redirect in item.aliases.items() %}
+{% if item.aliases != [] %}
+{%   for alias,redirect in item.aliases.items() %}
 {{ alias }}: {{ redirect }}
-{% endfor %}
+{%   endfor %}
+{% endif %}

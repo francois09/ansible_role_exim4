@@ -1,0 +1,47 @@
+---
+# Called by main.yml
+- name: MySQL/MariaDB user create
+  mysql_user:
+    name: "{{ exim4__db_conf.user }}"
+    password: "{{ exim4__db_conf.password }}"
+    priv: "{{ exim4__db_conf.name }}.*:ALL,GRANT"
+    host: "%"
+    login_user: "{{ exim4__db_conf.admin_user }}"
+    login_password: "{{ exim4__db_conf.admin_password }}"
+    login_host: "{{ exim4__db_conf.hostname }}"
+
+- name: MySQL/MariaDB db create
+  mysql_db:
+    name: "{{ exim4__db_conf.name }}"
+    login_user: "{{ exim4__db_conf.admin_user }}"
+    login_password: "{{ exim4__db_conf.admin_password }}"
+    login_host: "{{ exim4__db_conf.hostname }}"
+
+- name: MySQL/MariaDB populate file setup
+  copy:
+    src: initial_table.sql
+    dest: /tmp/initial_table.sql
+
+- name: MySQL/MariaDB db initial populate
+  mysql_db:
+    name: "{{ exim4__db_conf.name }}"
+    state: import
+    target: /tmp/initial_table.sql
+
+    login_user: "{{ exim4__db_conf.admin_user }}"
+    login_password: "{{ exim4__db_conf.admin_password }}"
+    login_host: "{{ exim4__db_conf.hostname }}"
+
+- name: Setup main file for sql servers
+  template:
+    src: main_30_exim4-config_mysql_servers
+    dest: /etc/exim4/conf.d/main/30_exim4-config_mysql_servers
+    mode: 0640
+  notify: Reload exim4
+
+
+- name: Setup specific router for virtual domains aliases
+  template:
+    src: router_103_exim4-config_virtual_domain_aliases_db
+    dest: /etc/exim4/conf.d/router/103_exim4-config_virtual_domain_aliases_db
+  notify: Reload exim4

@@ -8,6 +8,14 @@
     group: Debian-exim
     mode: 0644
 
+- name: Remove domain user aliases
+  file:
+    dest: "/var/lib/mail/{{ item.name }}/aliases"
+    state: absent
+  when:
+    - item.aliases is defined
+    - item.aliases == []
+
 - name: Create domain user aliases
   template:
     dest: "/var/lib/mail/{{ item.name }}/aliases"
@@ -17,6 +25,7 @@
     mode: 0644
   when:
     - item.aliases is defined
+    - item.aliases != []
 
 - include_tasks: create_domain_users_maildir.yml
   loop: "{{ item.users }}"

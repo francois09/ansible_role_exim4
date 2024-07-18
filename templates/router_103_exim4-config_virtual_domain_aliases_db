@@ -1,0 +1,13 @@
+
+### router/103_exim4-config_virtual_domain_aliases_db
+#################################
+
+
+virtual_domain_aliases_db:
+  debug_print = "R: virtual_domain_alias_db for $local_part@$domain"
+  driver = redirect
+  user = mail
+  group = mail
+  domains = ${lookup{$domain}lsearch{/var/lib/mail/domain_list}}
+  # data = ${lookup{$local_part}lsearch{/var/lib/mail/$domain_data/aliases}}
+  data = ${lookup mysql{select redirect from {{ exim4__db_conf.name }}.aliases where name='${quote_mysql:$local_part}' and fqdn='${quote_mysql:$domain}' and (until is NULL or until > now() ) }{$value}}

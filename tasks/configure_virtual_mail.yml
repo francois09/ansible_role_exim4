@@ -12,12 +12,6 @@
     dest: /etc/exim4/conf.d/transport/30_exim4-config_vmail_maildir
   notify: Reload exim4
 
-- name: Setup specific router for virtual domains aliases
-  template:
-    src: router_105_exim4-config_virtual_domain_aliases
-    dest: /etc/exim4/conf.d/router/105_exim4-config_virtual_domain_aliases
-  notify: Reload exim4
-
 - name: Setup specific router for virtual domains
   template:
     src: router_110_exim4-config_virtual_domain

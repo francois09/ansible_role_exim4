@@ -1,0 +1,3 @@
+# define sql servers used to obtain aliases list
+
+hide mysql_servers = {{ exim4__db_conf.hostname }}/{{ exim4__db_conf.name }}/{{ exim4__db_conf.user }}/{{ exim4__db_conf.password }}

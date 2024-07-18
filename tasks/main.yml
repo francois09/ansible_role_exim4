@@ -8,6 +8,15 @@
   when:
     - exim4__install
 
+- name: Install db package
+  apt:
+    name: "{{ exim4__db_aliases_default_packages }}"
+    update_cache: yes
+    state: present
+  when:
+    - exim4__install
+    - exim4__use_db_aliases|default(False)
+
 # Create config file
 - name: Update global aliases
   lineinfile:
@@ -112,6 +121,19 @@
     - exim4__configure
     - exim4__use_virtual_mail
 
+- import_tasks: configure_virtual_mail_aliases.yml
+  notify: Reload aliases
+  when:
+    - exim4__configure
+    - exim4__use_virtual_mail
+    - exim4__use_file_aliases
+
+- import_tasks: configure_virtual_mail_aliases_db.yml
+  when:
+    - exim4__configure
+    - exim4__use_virtual_mail
+    - exim4__use_db_aliases
+
 - name: Create domain list file
   template:
     src: domain_list
@@ -169,6 +191,19 @@
     - exim4__configure
     - exim4__conf_split
     - exim4__max_smtp_queue is defined
+  notify: Reload exim4
+
+- name: Set rewriting rules if needed
+  template:
+    src: rewrite_31_exim4-config_rewriting
+    dest: /etc/exim4/conf.d/rewrite/31_exim4-config_rewriting
+    mode: 0644
+    owner: root
+    group: root
+  when:
+    - exim4__configure
+    - exim4__conf_split
+    - exim4__conf_rewrite is defined
   notify: Reload exim4
 
 - name: Warn about exim4__max_smtp_queue config
