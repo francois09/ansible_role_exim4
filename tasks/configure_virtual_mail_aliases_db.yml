@@ -10,23 +10,53 @@
     login_password: "{{ exim4__db_conf.admin_password }}"
     login_host: "{{ exim4__db_conf.hostname }}"
 
-- name: MySQL/MariaDB db create
+- name: MySQL/MariaDB alias db create
   mysql_db:
     name: "{{ exim4__db_conf.name }}"
     login_user: "{{ exim4__db_conf.admin_user }}"
     login_password: "{{ exim4__db_conf.admin_password }}"
     login_host: "{{ exim4__db_conf.hostname }}"
 
-- name: MySQL/MariaDB populate file setup
+- name: MySQL/MariaDB populate alias file setup
   copy:
-    src: initial_table.sql
-    dest: /tmp/initial_table.sql
+    src: initial_alias_table.sql
+    dest: /tmp/initial_alias_table.sql
 
-- name: MySQL/MariaDB db initial populate
+- name: MySQL/MariaDB populate pwd file setup
+  copy:
+    src: initial_pwd_table.sql
+    dest: /tmp/initial_pwd_table.sql
+
+- name: MySQL/MariaDB populate domain file setup
+  copy:
+    src: initial_domain_table.sql
+    dest: /tmp/initial_domain_table.sql
+
+- name: MySQL/MariaDB alias db initial populate
   mysql_db:
     name: "{{ exim4__db_conf.name }}"
     state: import
-    target: /tmp/initial_table.sql
+    target: /tmp/initial_alias_table.sql
+
+    login_user: "{{ exim4__db_conf.admin_user }}"
+    login_password: "{{ exim4__db_conf.admin_password }}"
+    login_host: "{{ exim4__db_conf.hostname }}"
+
+- name: MySQL/MariaDB pwd db initial populate
+  mysql_db:
+    name: "{{ exim4__db_conf.name }}"
+    state: import
+    target: /tmp/initial_pwd_table.sql
+
+    login_user: "{{ exim4__db_conf.admin_user }}"
+    login_password: "{{ exim4__db_conf.admin_password }}"
+    login_host: "{{ exim4__db_conf.hostname }}"
+
+- name: MySQL/MariaDB domain db initial populate
+  mysql_db:
+    name: "{{ exim4__db_conf.name }}"
+    state: import
+    target: /tmp/initial_domain_table.sql
 
     login_user: "{{ exim4__db_conf.admin_user }}"
     login_password: "{{ exim4__db_conf.admin_password }}"

@@ -16,3 +16,7 @@
   when:
     - item.password is not defined
     - item.md5 is defined
+
+###
+### If the hashed password is $1$SALT$MD5PASSWORD , verification can be done with:
+### echo "PASSWORD" | openssl passwd -stdin -1 -salt SALT doit redonner la version hachée du sel + password ($1$SALT$MD5PASSWORD)
