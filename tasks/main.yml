@@ -67,6 +67,15 @@
     - exim4__conf_hubbed is defined
     - exim4__conf_split
 
+- name: Fix TLS check
+  template:
+    src: main_00_local_settings
+    dest: /etc/exim4/conf.d/main/00_local_settings
+  notify: Reload exim4
+  when:
+    - exim4__configure
+    - exim4__avoid_TLS_check|default(False)
+
 - name: Warn about hubbed_hosts config
   debug:
     msg: "Don't know how to manage hubbed_host router on a non-split config !"
